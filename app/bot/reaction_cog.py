@@ -14,12 +14,13 @@ class ReactionCog(commands.Cog):
     async def on_reaction_add(self, reaction: discord.Reaction, user: Union[discord.User, discord.Member]):
         if reaction.message.author == self.bot.user:
             try:
-                logger.info(f'Detected reaction "{reaction}"')
+                logger.info(f'Detected reaction "{reaction}" from user "{user}".')
                 await reaction.remove(user)
-                logger.info(f'Removed reaction "{reaction}"')
+                logger.info(f'Removed reaction "{reaction}" from user "{user}".')
                 await user.timeout_for(duration=timedelta(seconds=300), reason='Não use Mudae.')
                 return logger.info(f'User "{user.display_name}" has been muted.')
-            except commands.MissingPermissions:
-                return await reaction.message.delete()
+            except (commands.MissingPermissions, discord.errors.Forbidden) as err:
+                logger.error(f'Failed to fully execute script due to "{err}".')
+                return await reaction.message.edit(content=reaction.message.content + '\nclaimed!')
 
 
