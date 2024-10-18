@@ -13,9 +13,13 @@ class ReactionCog(commands.Cog):
     @commands.Cog.listener()
     async def on_reaction_add(self, reaction: discord.Reaction, user: Union[discord.User, discord.Member]):
         if reaction.message.author == self.bot.user:
-            logger.info(f'Detected reaction "{reaction}"')
-            await reaction.remove(user)
-            logger.info(f'Removed reaction "{reaction}"')
-            await user.timeout_for(duration=timedelta(seconds=300), reason='Não use Mudae.')
-            return logger.info(f'User "{user.display_name}" has been muted.')
+            try:
+                logger.info(f'Detected reaction "{reaction}"')
+                await reaction.remove(user)
+                logger.info(f'Removed reaction "{reaction}"')
+                await user.timeout_for(duration=timedelta(seconds=300), reason='Não use Mudae.')
+                return logger.info(f'User "{user.display_name}" has been muted.')
+            except commands.MissingPermissions:
+                return await reaction.message.delete()
+
 
