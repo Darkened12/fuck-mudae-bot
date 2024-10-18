@@ -21,6 +21,9 @@ class ReactionCog(commands.Cog):
                 return logger.info(f'User "{user.display_name}" has been muted.')
             except (commands.MissingPermissions, discord.errors.Forbidden) as err:
                 logger.error(f'Failed to fully execute script due to "{err}".')
-                return await reaction.message.channel.send(f'💖 **{user.name}** and **Character** are now married! 💖')
+                embed: discord.Embed = reaction.message.embeds[0]
+                embed.colour = discord.Colour.dark_red()
+                await reaction.message.edit(embed=embed)
+                return await reaction.message.channel.send(f'💖 **{user.name}** and **{embed.title}** are now married! 💖')
 
 

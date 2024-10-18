@@ -1,6 +1,9 @@
 import discord
+import random
 from discord.ext import commands
 from app.services.logging_service import logger
+from app.models.waifu_anime_dataset import anime_waifus
+from app.views.mudae_embed import get_mudae_embed
 
 
 class CommandsCog(commands.Cog):
@@ -11,7 +14,8 @@ class CommandsCog(commands.Cog):
     async def wa(self, ctx: commands.Context):
         """Waifu Anime"""
         logger.info(f'User "{ctx.author.display_name}" used command "wa".')
-        return await ctx.send('hello')
+        waifu = random.choice(anime_waifus)
+        return await ctx.send(embed=get_mudae_embed(waifu))
 
     @commands.command()
     async def ha(self, ctx: commands.Context):
