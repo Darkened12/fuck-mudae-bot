@@ -14,5 +14,6 @@ class EventsCog(commands.Cog):
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx: commands.Context, error: commands.CommandError):
-        logger.warn(error)
-        return await ctx.send(str(error))
+        logger.error(f'User tried command "{ctx.command}". Error was "{error}".')
+        return await ctx.send(f'We are currently experiencing too much network usage and some commands are not working. '
+                              f'Currently, only `$wa`, `$ha`, `$wg` and `$hg` are available.')
