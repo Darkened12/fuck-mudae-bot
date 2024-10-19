@@ -18,14 +18,10 @@ class ReactionCog(commands.Cog):
 
     @commands.Cog.listener()
     async def on_ready(self):
-        try:
-            self.rickroll_logging_service = RickRollLoggingService(self.bot.get_channel(1296629010742120521))
-            self.timeout_logging_service = TimeoutLoggingService(self.bot.get_channel(1296629010742120521))
-            return logger.info(f'"{self.__cog_name__}" is ready.')
-        except Exception as err:
-            raise err
-        finally:
-            await self.bot.close()
+        self.rickroll_logging_service = RickRollLoggingService(self.bot.get_channel(1296629010742120521))
+        self.timeout_logging_service = TimeoutLoggingService(self.bot.get_channel(1296629010742120521))
+        logger.info(f'"{self.__cog_name__}" is ready.')
+
 
     @commands.Cog.listener()
     async def on_reaction_add(self, reaction: discord.Reaction, user: Union[discord.User, discord.Member]):
