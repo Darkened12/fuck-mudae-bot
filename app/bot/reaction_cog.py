@@ -13,6 +13,10 @@ class ReactionCog(commands.Cog):
         self.bot = bot
 
     @commands.Cog.listener()
+    async def on_ready(self):
+        logger.info(f'"{self.__cog_name__}" is ready.')
+
+    @commands.Cog.listener()
     async def on_reaction_add(self, reaction: discord.Reaction, user: Union[discord.User, discord.Member]):
         if reaction.message.author == self.bot.user and reaction.message.embeds:
             if reaction.message.embeds[0].colour != discord.Colour.dark_red():
