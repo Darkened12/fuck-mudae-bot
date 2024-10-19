@@ -1,3 +1,4 @@
+import asyncio
 from datetime import timedelta
 from typing import Union
 
@@ -29,9 +30,12 @@ class ReactionCog(commands.Cog):
     @staticmethod
     async def __execute_timeout(user: Union[discord.User, discord.Member], duration=timedelta(seconds=300)):
         await user.timeout_for(duration=duration, reason='Não use Mudae.')
+        logger.info(f'User "{user.display_name}" has been muted.')
+        await asyncio.sleep(3)
         await user.send('Seems like there has been an internal error. Please send a ticket to '
-                        '[www.mudae.net/support](<https://tinyurl.com/57xa2jwk>) so we can sort this out! 💖')
-        return logger.info(f'User "{user.display_name}" has been muted.')
+                        '[www.mudae.net/support](<https://bit.ly/3BlS71b>) so we can sort this out! 💖')
+        logger.info(f'DM sent to user "{user.display_name}".')
+
 
     @staticmethod
     async def __execute_fake_marriage(reaction: discord.Reaction, user: Union[discord.User, discord.Member]):
