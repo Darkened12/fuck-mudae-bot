@@ -19,7 +19,7 @@ class ReactionCog(commands.Cog):
                     if not self.__is_admin(user):
                         await reaction.remove(user)
                         logger.info(f'Removed reaction "{reaction}" from user "{user.display_name}".')
-                        return !waawait self.__execute_timeout(user)
+                        return await self.__execute_timeout(user)
 
                     raise PermissionError('User is an admin.')
                 except (commands.MissingPermissions, discord.errors.Forbidden, PermissionError) as err:
