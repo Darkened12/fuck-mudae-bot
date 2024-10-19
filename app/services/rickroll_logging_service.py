@@ -14,7 +14,7 @@ class RickRollLoggingService:
                 title='Novo rickroll',
                 colour=discord.Colour.dark_grey()
             )
-            embed.add_field(name='Usuário: ', value=user.mention)
+            embed.add_field(name='Otário(a): ', value=user.mention)
             if user.avatar:
                 if user.avatar.url:
                     embed.set_thumbnail(url=user.avatar.url)
