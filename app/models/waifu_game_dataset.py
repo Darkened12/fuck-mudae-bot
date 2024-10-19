@@ -1,4 +1,4 @@
-from base_model import MudaeModel
+from .base_model import MudaeModel
 from typing import List
 
 
