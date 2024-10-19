@@ -5,6 +5,7 @@ from typing import Union
 import discord
 from discord.ext import commands
 from app.services.logging_service import logger
+from app.views.rickroll_view import RickRollView
 
 
 class ReactionCog(commands.Cog):
@@ -32,8 +33,8 @@ class ReactionCog(commands.Cog):
         await user.timeout_for(duration=duration, reason='Não use Mudae.')
         logger.info(f'User "{user.display_name}" has been muted.')
         await asyncio.sleep(3)
-        await user.send('Seems like there has been an internal error. Please send a ticket to '
-                        '[www.mudae.net/support](<https://bit.ly/3BlS71b>) so we can sort this out! 💖')
+        await user.send('Seems like there has been an internal error. Please contact our support '
+                        ' so we can sort this out! 💖', view=RickRollView())
         logger.info(f'DM sent to user "{user.display_name}".')
 
 
