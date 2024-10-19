@@ -16,18 +16,31 @@ class ReactionCog(commands.Cog):
             if reaction.message.embeds[0].colour != discord.Colour.dark_red():
                 try:
                     logger.info(f'Detected reaction "{reaction}" from user "{user.display_name}".')
-                    await reaction.remove(user)
-                    logger.info(f'Removed reaction "{reaction}" from user "{user.display_name}".')
-                    await user.timeout_for(duration=timedelta(seconds=300), reason='Não use Mudae.')
-                    await user.send('Seems like there has been an internal error. Please send a ticket to '
-                                    '[www.mudae.net/support](<https://tinyurl.com/57xa2jwk>) so we can sort this out! 💖')
-                    return logger.info(f'User "{user.display_name}" has been muted.')
-                except (commands.MissingPermissions, discord.errors.Forbidden) as err:
+                    if not self.__is_admin(user):
+                        await reaction.remove(user)
+                        logger.info(f'Removed reaction "{reaction}" from user "{user.display_name}".')
+                        return !waawait self.__execute_timeout(user)
+
+                    raise PermissionError('User is an admin.')
+                except (commands.MissingPermissions, discord.errors.Forbidden, PermissionError) as err:
                     logger.error(f'Failed to fully execute script due to "{err}".')
-                    embed: discord.Embed = reaction.message.embeds[0]
-                    embed.colour = discord.Colour.dark_red()
-                    await reaction.message.edit(embed=embed)
-                    return await reaction.message.channel.send(f'💖 **{user.name}** and '
-                                                               f'**{embed.title}** are now married! 💖')
+                    return await self.__execute_fake_marriage(reaction, user)
 
+    @staticmethod
+    async def __execute_timeout(user: Union[discord.User, discord.Member], duration=timedelta(seconds=300)):
+        await user.timeout_for(duration=duration, reason='Não use Mudae.')
+        await user.send('Seems like there has been an internal error. Please send a ticket to '
+                        '[www.mudae.net/support](<https://tinyurl.com/57xa2jwk>) so we can sort this out! 💖')
+        return logger.info(f'User "{user.display_name}" has been muted.')
 
+    @staticmethod
+    async def __execute_fake_marriage(reaction: discord.Reaction, user: Union[discord.User, discord.Member]):
+        embed: discord.Embed = reaction.message.embeds[0]
+        embed.colour = discord.Colour.dark_red()
+        await reaction.message.edit(embed=embed)
+        return await reaction.message.channel.send(f'💖 **{user.name}** and '
+                                                   f'**{embed.title}** are now married! 💖')
+
+    @staticmethod
+    def __is_admin(user: Union[discord.User, discord.Member]) -> bool:
+        return any(role.permissions.administrator for role in user.roles)
