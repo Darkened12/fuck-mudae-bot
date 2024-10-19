@@ -5,19 +5,25 @@ from typing import Union
 import discord
 from discord.ext import commands
 from app.services.logging_service import logger
+from app.services.rickroll_service import RickRollService
 from app.views.rickroll_view import RickRollView
 
 
 class ReactionCog(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
+        self.rickroll_service = None
 
     @commands.Cog.listener()
     async def on_ready(self):
+        self.rickroll_service = RickRollService(self.bot.get_channel(1296629010742120521))
         logger.info(f'"{self.__cog_name__}" is ready.')
 
     @commands.Cog.listener()
     async def on_reaction_add(self, reaction: discord.Reaction, user: Union[discord.User, discord.Member]):
+        if not self.bot.is_ready():
+            return
+
         if reaction.message.author == self.bot.user and reaction.message.embeds:
             if reaction.message.embeds[0].colour != discord.Colour.dark_red():
                 try:
@@ -32,13 +38,12 @@ class ReactionCog(commands.Cog):
                     logger.error(f'Failed to fully execute script due to "{err}".')
                     return await self.__execute_fake_marriage(reaction, user)
 
-    @staticmethod
-    async def __execute_timeout(user: Union[discord.User, discord.Member], duration=timedelta(seconds=300)):
+    async def __execute_timeout(self, user: Union[discord.User, discord.Member], duration=timedelta(seconds=300)):
         await user.timeout_for(duration=duration, reason='Não use Mudae.')
         logger.info(f'User "{user.display_name}" has been muted.')
         await asyncio.sleep(3)
         await user.send('Seems like there has been an internal error. Please contact our support '
-                        ' so we can sort this out! 💖', view=RickRollView())
+                        ' so we can sort this out! 💖', view=RickRollView(self.rickroll_service))
         logger.info(f'DM sent to user "{user.display_name}".')
 
     @staticmethod
