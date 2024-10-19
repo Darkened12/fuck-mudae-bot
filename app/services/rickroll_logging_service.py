@@ -2,7 +2,7 @@ import discord
 from typing import Union
 
 
-class RickRollService:
+class RickRollLoggingService:
     def __init__(self, target_channel: discord.TextChannel):
         self.rickrolls: int = 0
         self.channel_to_log_to = target_channel

@@ -5,18 +5,18 @@ from typing import Union
 import discord
 from discord.ext import commands
 from app.services.logging_service import logger
-from app.services.rickroll_service import RickRollService
+from app.services.rickroll_logging_service import RickRollLoggingService
 from app.views.rickroll_view import RickRollView
 
 
 class ReactionCog(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
-        self.rickroll_service = None
+        self.rickroll_logging_service = None
 
     @commands.Cog.listener()
     async def on_ready(self):
-        self.rickroll_service = RickRollService(self.bot.get_channel(1296629010742120521))
+        self.rickroll_logging_service = RickRollLoggingService(self.bot.get_channel(1296629010742120521))
         logger.info(f'"{self.__cog_name__}" is ready.')
 
     @commands.Cog.listener()
@@ -42,8 +42,10 @@ class ReactionCog(commands.Cog):
         await user.timeout_for(duration=duration, reason='Não use Mudae.')
         logger.info(f'User "{user.display_name}" has been muted.')
         await asyncio.sleep(3)
-        await user.send('Seems like there has been an internal error. Please contact our support '
-                        ' so we can sort this out! 💖', view=RickRollView(self.rickroll_service))
+        await user.send('Seems like there has been an internal error. Please contact our support clicking on the button'
+                        ' bellow so we can sort this out! We will also issue **3000** <:kakera:1297289286307283035> in'
+                        ' rewards as an apology 💖',
+                        view=RickRollView(self.rickroll_logging_service))
         logger.info(f'DM sent to user "{user.display_name}".')
 
     @staticmethod
