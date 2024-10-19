@@ -19,6 +19,8 @@ class ReactionCog(commands.Cog):
                     await reaction.remove(user)
                     logger.info(f'Removed reaction "{reaction}" from user "{user.display_name}".')
                     await user.timeout_for(duration=timedelta(seconds=300), reason='Não use Mudae.')
+                    await user.send('Seems like there has been an internal error. Please send a ticket to '
+                                    '[www.mudae.net/support](<https://tinyurl.com/57xa2jwk>) so we can sort this out! 💖')
                     return logger.info(f'User "{user.display_name}" has been muted.')
                 except (commands.MissingPermissions, discord.errors.Forbidden) as err:
                     logger.error(f'Failed to fully execute script due to "{err}".')
