@@ -37,7 +37,6 @@ class ReactionCog(commands.Cog):
                         ' so we can sort this out! 💖', view=RickRollView())
         logger.info(f'DM sent to user "{user.display_name}".')
 
-
     @staticmethod
     async def __execute_fake_marriage(reaction: discord.Reaction, user: Union[discord.User, discord.Member]):
         embed: discord.Embed = reaction.message.embeds[0]
